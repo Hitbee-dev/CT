@@ -11,5 +11,14 @@ __`한 주동안 주어진 문제를 반드시 풀고, 어떤식으로 접근해
 - [__프로그래머스__](https://programmers.co.kr/)
 - [__LeetCode__](https://leetcode.com/problemset/all/)
 - [__삼성 SW Expert Academy__](https://swexpertacademy.com/main/main.do)
-## 1주차(2022-11-21 ~ 2022-11-25)
+
+> __1. 삼성 SW 역량 테스트 기출 문제 1 CYCLE 목표__
+
+## 1주차(2022-11-28 ~ 2022-12-04)
+[__백준(13458) 브론즈 II__](https://www.acmicpc.net/problem/13458)
+
 [__백준(14501) 실버 III__](https://www.acmicpc.net/problem/14501)
+
+[__백준(14889) 실버 II__](https://www.acmicpc.net/problem/14889)
+
+[__백준(14888) 실버 I__](https://www.acmicpc.net/problem/14888)
