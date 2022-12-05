@@ -11,6 +11,7 @@ __`한 주동안 주어진 문제를 반드시 풀고, 어떤식으로 접근해
 - [__프로그래머스__](https://programmers.co.kr/)
 - [__LeetCode__](https://leetcode.com/problemset/all/)
 - [__삼성 SW Expert Academy__](https://swexpertacademy.com/main/main.do)
+- [__CODETREE__](https://www.codetree.ai/frequent-problems)
 
 > __1. 삼성 SW 역량 테스트 기출 문제 1 CYCLE 목표__
 
@@ -22,3 +23,10 @@ __`한 주동안 주어진 문제를 반드시 풀고, 어떤식으로 접근해
 [__백준(14889) 실버 II__](https://www.acmicpc.net/problem/14889)
 
 [__백준(14888) 실버 I__](https://www.acmicpc.net/problem/14888)
+
+> __2. CODE TREE 삼성 기출문제 1 CYCLE로 변경__
+
+## 2주차(2022-12-05 ~ 2022-12-11)
+[__CODE TREE(48) 보통__](https://www.codetree.ai/frequent-problems/battle-ground/description)
+
+[__CODE TREE(50) 보통__](https://www.codetree.ai/frequent-problems/codetree-mon-bread/description)
