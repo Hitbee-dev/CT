@@ -45,82 +45,50 @@ s = 초기능력치
 
 import sys
 
-# 보고있는 방향으로 이동
-def arrow(idx, x, y, num):
-    if num == 0: # 북
-        if x-1 == -1:
-            player_arrow[idx] = 2
-            return (x+1, y, 1)
-        return (x-1, y, 0)
-    elif num == 1: # 동
-        if y+1 == n:
-            player_arrow[idx] = 3
-            return (x, y-1, 1)
-        return (x, y+1, 0)
-    elif num == 2: # 남
-        if x+1 == n:
-            player_arrow[idx] = 0
-            return (x-1, y, 1)
-        return (x+1, y, 0)
-    elif num == 3: # 서
-        if y-1 == -1:
-            player_arrow[idx] = 1
-            return (x, y+1, 1)
-        return (x, y-1, 0)
-
-def player_power(idx):
-    return player_status[idx] + player_gun[idx]
-
-def swap_gun(area_gun, player_gun):
-    if player_gun < area_gun:
-        area_gun, player_gun = player_gun, area_gun
-        return area_gun, player_gun
-    return area_gun, player_gun
-
-def rotate(idx, x, y, num):
-    # 졌을 때, 가려는 곳에 플레이어가 있거나 벽이라면 90도씩 회전해서 빈 칸이 보이는 순간 이동
-    ax, ay, check = arrow(idx, x, y, num)
-    if (ax, ay) in player_axis.values() or check == 1:
-        for i in range(1, 5):
-            if num+i > 3:
-                num = (num+i-i)
-            else:
-                num = num+i
-            bx, by, bcheck = arrow(idx, x, y, num)
-            if bcheck == 0:
-                player_arrow[idx] = num
-                return (bx, by, num)
-    return (ax, ay, num)
-            
+# def str_to_int(data):
+#     return [int(data)]
 
 # input = sys.stdin.readline
 # n, m, k = map(int,input().split())
-# # 격자
-# area = [list(map(int, input().split())) for _ in range(n)]
-# # x, y좌표는 둘다 -1씩 해줘야 함(인덱스로 계산하기 편하게)
+# area = [list(map(str_to_int, input().split())) for _ in range(n)]
 # xyds = [list(map(int, input().split())) for _ in range(m)]
 
-# n, m, k = 5, 4, 1
-# # 격자
-# area = [[1, 2, 0, 1, 2],
-#         [1, 0, 3, 3, 1],
-#         [1, 3, 0, 2, 3],
-#         [2, 1, 2, 4, 5],
-#         [0, 1, 3, 2, 0]]
+'''
+n, m, k = 5, 4, 1
+# 격자
+area = [[[1], [2], [0], [1], [2]],
+        [[1], [0], [3], [3], [1]],
+        [[1], [3], [0], [2], [3]],
+        [[2], [1], [2], [4], [5]],
+        [[0], [1], [3], [2], [0]]]
 
-# # x, y좌표는 둘다 -1씩 해줘야 함(인덱스로 계산하기 편하게)
-# xyds = [[1, 3, 2, 3],
-#         [2, 2, 1, 5],
-#         [3, 3, 2, 2],
-#         [5, 1, 3, 4]]
+# x, y좌표는 둘다 -1씩 해줘야 함(인덱스로 계산하기 편하게)
+xyds = [[1, 3, 2, 3],
+        [2, 2, 1, 5],
+        [3, 3, 2, 2],
+        [5, 1, 3, 4]]
 
 n, m, k = 5, 4, 2
 # 격자
-area = [[1, 2, 0, 1, 2],
-        [1, 0, 3, 3, 1],
-        [1, 3, 0, 2, 3],
-        [2, 1, 2, 4, 5],
-        [0, 1, 3, 2, 0]]
+area = [[[1], [2], [0], [1], [2]],
+        [[1], [0], [3], [3], [1]],
+        [[1], [3], [0], [2], [3]],
+        [[2], [1], [2], [4], [5]],
+        [[0], [1], [3], [2], [0]]]
+     
+# x, y좌표는 둘다 -1씩 해줘야 함(인덱스로 계산하기 편하게)
+xyds = [[1, 3, 2, 3],
+        [2, 2, 1, 5],
+        [3, 3, 2, 2],
+        [5, 1, 3, 4]]
+'''
+n, m, k = 5, 4, 6
+# 격자
+area = [[[1], [2], [0], [1], [2]],
+        [[1], [0], [3], [3], [1]],
+        [[1], [3], [0], [2], [3]],
+        [[2], [1], [2], [4], [5]],
+        [[0], [1], [3], [2], [0]]]
      
 # x, y좌표는 둘다 -1씩 해줘야 함(인덱스로 계산하기 편하게)
 xyds = [[1, 3, 2, 3],
@@ -128,77 +96,115 @@ xyds = [[1, 3, 2, 3],
         [3, 3, 2, 2],
         [5, 1, 3, 4]]
 
-# n, m, k = 5, 4, 6
-# # 격자
-# area = [[1, 2, 0, 1, 2],
-#         [1, 0, 3, 3, 1],
-#         [1, 3, 0, 2, 3],
-#         [2, 1, 2, 4, 5],
-#         [0, 1, 3, 2, 0]]
-     
-# # x, y좌표는 둘다 -1씩 해줘야 함(인덱스로 계산하기 편하게)
-# xyds = [[1, 3, 2, 3],
-#         [2, 2, 1, 5],
-#         [3, 3, 2, 2],
-#         [5, 1, 3, 4]]
+def move(idx, x, y, d):
+    global p_move
+    arrow = [(-1, 0),(0, 1),(1, 0),(0, -1)]
+    # 그냥 이동 가능하다면 이동한 방향 return
+    if (-1 < x+arrow[d][0] < n) and (-1 < y+arrow[d][1] < n):
+        return x+arrow[d][0], y+arrow[d][1]
+    # 벽이라 이동 못하면 방향 전환 + 반대로 이동
+    change_move = {0: 2, 1: 3, 2: 0, 3: 1}
+    d = change_move[d]
+    p_move[idx] = d
+    return x+arrow[d][0], y+arrow[d][1]
+
+# 여기 문제가 있는게 확실하다;;
+def lose_move(idx, x, y, d):
+    global p_move
+    arrow = [(-1, 0),(0, 1),(1, 0),(0, -1)]
+    for index in range(d, d+4):
+        if index == 4:
+            index = index-1
+        elif index == 5:
+            index = index-2
+        elif index == 6:
+            index = index-3
+        elif index == 7:
+            index = index-4
+            
+        # 벽, 플레이어 등 간섭 없이 이동 가능하다면 이동한 방향 return
+        if (-1 < x+arrow[p_move[idx]][0] < n) and (-1 < y+arrow[p_move[idx]][1] < n) and (x+arrow[p_move[idx]][0], y+arrow[p_move[idx]][1]) not in p_loc.values():
+            return x+arrow[p_move[idx]][0], y+arrow[p_move[idx]][1]
+        # 벽이나 플레이어 때문에 이동 못하면 90도 방향 전환 + 전환한 방향으로 이동
+        change_move = {0: 1, 1: 2, 2: 3, 3: 0}
+        index = change_move[index]
+        p_move[idx] = index
+
+
+def swap_gun(guns, mygun):
+    guns = sorted(guns, reverse=True)
+    if max(guns) > mygun:
+        buf_gun = mygun
+        mygun = guns.pop(0)
+        guns.append(buf_gun)
+        return guns, mygun
+    return guns, mygun
+
+def p_power(ps, pg):
+    print(ps, pg)
+    return ps+pg
+
+# 플레이어들의 현재 위치
+p_loc = {}
+
+# 플레이어들이 보고 있는 방향
+p_move = [0] * m
 
 # 플레이어들의 능력치
-player_status = [0] * m
+p_status = [0] * m
 
-# 플레이어가 가지고있는 총의 능력치
-player_gun = [0] * m
+# 플레이어들의 총
+p_gun = [0] * m
 
-# 플레이어가 획득한 포인트
-player_point = [0] * m
+# 플레이어들의 포인트
+p_point = [0] * m
 
-# 플레이어의 이동 방향
-player_arrow = [0] * m
+# 플레이어들의 초기값 설정
+for idx , (x,y,d,s) in enumerate(xyds):
+    p_loc[idx] = (x-1, y-1)
+    p_move[idx] = d
+    p_status[idx] = s
 
-# 플레이어들의 초기 위치
-player_axis = {}
-for idx, (x,y,d,s) in enumerate(xyds):
-    player_axis[idx] = (x-1, y-1)
-    player_status[idx] = s
-    player_arrow[idx] = d
-
-# k라운드동안 반복
+# k번 만큼 라운드 진행
 for _ in range(k):
-    # 4명의 플레이어 한번씩 움직일 수 있도록
+    # 플레이어 순서대로 본인이 향하는 방향으로 이동
     for i in range(m):
-        # 플레이어 이동
-        dx, dy, _ = arrow(i, player_axis[i][0], player_axis[i][1], player_arrow[i])
-        # 이동한 위치에 플레이어 있으면 싸우기
-        if (dx, dy) in player_axis.values():
-            for key, value in player_axis.items():
+        dx, dy = move(i, p_loc[i][0], p_loc[i][1], p_move[i])
+
+        # 만약 이동하려는 위치에 플레이어가 없다면
+        if (dx, dy) not in p_loc.values():
+            area[dx][dy], p_gun[i] = swap_gun(area[dx][dy], p_gun[i])
+            p_loc[i] = (dx, dy)
+        else: # 이동하려는 위치에 플레이어가 있다면
+            # 싸움땅!
+            for key, value in p_loc.items():
+                # 만약 몇번째 플레이어랑 마추졌는지 찾았다면
                 if value == (dx, dy):
-                    # 비겼다면
-                    if player_power(i) == player_power(key):
-                        win = i if player_status[i] > player_status[key] else key
-                        lose = i if player_status[i] < player_status[key] else key
-                        # 이긴사람한테 포인트 먼저 지급
-                        player_point[win] += player_status[win] - player_status[lose]
-                    # 바로 이기거나 졌다면
-                    else:
-                        win = i if player_power(i) > player_power(key) else key
-                        lose = i if player_power(i) < player_power(key) else key
-                        # 이긴사람한테 포인트 먼저 지급
-                        player_point[win] += player_power(win) - player_power(lose)
+                    p1 = p_power(p_status[i], p_gun[i])
+                    p2 = p_power(p_status[key], p_gun[key])
+                    # 비겼다면 플레이어 능력치 순으로 승자 패자 가림
+                    if p1 == p2:
+                        win = i if p_status[i] > p_status[key] else key
+                        lose = i if p_status[i] < p_status[key] else key
+                    else: # 비긴게 아니라 한번에 결과가 나왔으면 승자 패자 가림
+                        win = i if p1 > p2 else key
+                        lose = i if p1 < p2 else key
+                    # 이긴사람한테 포인트 줌
+                    p_point[win] += abs(p1 - p2)
+                    
+                    # 진사람
+                    # 총 내려놓음
+                    area[dx][dy].append(p_gun[lose])
+                    p_gun[lose] = 0
+                    # 1칸 이동(플레이어나 벽 없으면 그대로, 있으면 90도씩 회전)
+                    fx, fy = lose_move(lose, dx, dy, p_move[lose])
+                    # 이동한 위치에서 총 바꿈
+                    area[fx][fy], p_gun[lose] = swap_gun(area[fx][fy], p_gun[lose])
 
-                    # 졌다면
-                    area[dx][dy], player_gun[lose] = swap_gun(area[dx][dy], player_gun[lose])
-                    ddx, ddy, _ = rotate(lose, dx, dy, player_arrow[lose])
-                    area[ddx][ddy], player_gun[lose] = swap_gun(area[ddx][ddy], player_gun[lose])
-                    # 이겼다면
-                    area[dx][dy], player_gun[win] = swap_gun(area[dx][dy], player_gun[win])
+                    # 이긴사람
+                    area[dx][dy], p_gun[win] = swap_gun(area[dx][dy], p_gun[win])
+                    
+                    p_loc[win] = (dx, dy)
+                    p_loc[lose] = (fx, fy)
 
-                    # 플레이어 위치 변경
-                    player_axis[win] = (dx, dy)
-                    player_axis[lose] = (ddx, ddy)
-                    break
-        else:
-            # 이동한 위치에 플레이어 없으면 총 바꾸고 위치 업데이트
-            area[dx][dy], player_gun[i] = swap_gun(area[dx][dy], player_gun[i])
-            player_axis[i] = (dx, dy)
-        
-for p in player_point:
-    print(p, end=" ")
+print(p_point)
