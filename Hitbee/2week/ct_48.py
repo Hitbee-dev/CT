@@ -96,15 +96,23 @@ xyds = [[1, 3, 2, 3],
 #         [3, 3, 2, 2],
 #         [5, 1, 3, 4]]
 
-n, m, k = 3, 5, 1
-area = [[[0], [5], [0]],
-        [[0], [0], [4]],
-        [[5], [3], [0]]]
-xyds = [[1, 1, 0, 2],
-        [3, 3, 2, 1],
-        [1, 3, 2, 5],
-        [2, 1, 1, 3],
-        [2, 2, 1, 4]]
+# n, m, k = 3, 5, 1
+# area = [[[0], [5], [0]],
+#         [[0], [0], [4]],
+#         [[5], [3], [0]]]
+# xyds = [[1, 1, 0, 2],
+#         [3, 3, 2, 1],
+#         [1, 3, 2, 5],
+#         [2, 1, 1, 3],
+#         [2, 2, 1, 4]]
+
+
+n, m, k = 2, 3 ,8
+area = [[[0], [0]],
+        [[0], [0]]]
+xyds = [[1, 2, 0, 3],
+        [2, 2, 3, 5],
+        [1, 1, 3, 2]]
 
 def move(idx, x, y, d):
     global p_move
@@ -126,17 +134,17 @@ def lose_move(idx, x, y, d):
     for index in range(d, d+4):
         if index > 3:
             index = index-4
-        p_move[idx] = index
         
-        # print(f"이동방향:{index}")
         # 벽, 플레이어 등 간섭 없이 이동 가능하다면 이동한 방향 return
         if (-1 < x+arrow[index][0] < n) and (-1 < y+arrow[index][1] < n) and (x+arrow[index][0], y+arrow[index][1]) not in p_loc.values():
             fx, fy = x+arrow[index][0], y+arrow[index][1]
-            # print(f"{idx}플레이어 방향은{index}, 위치는 {fx, fy}로 쫒겨남")
+            print(f"{idx}플레이어 방향은{index}, 위치는 {fx, fy}로 쫒겨남")
+            # 방향 업데이트
+            p_move[idx] = index
             # 위치 업데이트
             p_loc[idx] = (fx, fy)
             # 이동한 위치에서 총 바꿈
-            area[fx][fy], p_gun[lose] = swap_gun(area[fx][fy], p_gun[lose])
+            area[fx][fy], p_gun[idx] = swap_gun(area[fx][fy], p_gun[idx])
             break
 
 def swap_gun(guns, mygun):
@@ -192,17 +200,18 @@ for _ in range(k):
                 if value == (dx, dy):
                     p1 = p_power(p_status[i], p_gun[i])
                     p2 = p_power(p_status[key], p_gun[key])
-                    # print(f"p1: {p1}, p2: {p2}")
+                    print(f"\np1: {p1}, p2: {p2}")
                     # 비겼다면 플레이어 능력치 순으로 승자 패자 가림
                     if p1 == p2:
                         win = i if p_status[i] > p_status[key] else key
                         lose = i if p_status[i] < p_status[key] else key
-                        # print(f"win: {win}, lose: {lose}")
+                        print(f"win: {win}, lose: {lose}")
                     else: # 비긴게 아니라 한번에 결과가 나왔으면 승자 패자 가림
                         win = i if p1 > p2 else key
                         lose = i if p1 < p2 else key
                     # 이긴사람한테 포인트 줌
                     p_point[win] += abs(p1 - p2)
+                    print(f"{win}플레이어가 이겼습니다. {abs(p1 - p2)}점 획득!")
                     p_loc[win] = (dx, dy)
                     # 진사람
                     # 총 내려놓음
@@ -213,8 +222,8 @@ for _ in range(k):
 
                     # 이긴사람
                     area[dx][dy], p_gun[win] = swap_gun(area[dx][dy], p_gun[win])
-        # for idx, (s, g) in enumerate(zip(p_status, p_gun)):
-        #     print(idx, (s, g), end = " ")
+        for idx, (s, g) in enumerate(zip(p_status, p_gun)):
+            print(idx, (s, g), end = " ")
 
 for p in p_point:
     print(p, end=" ")
