@@ -14,22 +14,23 @@ def dfs(count, x, y):
     if x == escape[0] and y == escape[1]:
         for _ in range(N):
             print(maze[_])
-            print("=================")  
+        print("=================")  
         print(f"탈출! 이동 횟수: {count}")
         result.append(count)
         return
     # 만약 이동할 수 있는 곳이라면
     if maze[x][y] == 1:
-        maze[x][y] += count+1
-        # 남쪽으로 이동
-        dfs(count+1, x+1, y)
-        # 동쪽으로 이동
-        dfs(count+1, x, y+1)
+        count = count+1
+        maze[x][y] = count
         # 북쪽으로 이동
-        dfs(count+1, x-1, y)
-
+        dfs(count, x-1, y)
         # 서쪽으로 이동
-        dfs(count+1, x, y-1)
+        dfs(count, x, y-1)
+        # 남쪽으로 이동
+        dfs(count, x+1, y)
+        # 동쪽으로 이동
+        dfs(count, x, y+1)
+
         return
     return
 
