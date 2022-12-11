@@ -30,3 +30,8 @@ __`한 주동안 주어진 문제를 반드시 풀고, 어떤식으로 접근해
 [__CODE TREE(48) 보통__](https://www.codetree.ai/frequent-problems/battle-ground/description)
 
 [__CODE TREE(50) 보통__](https://www.codetree.ai/frequent-problems/codetree-mon-bread/description)
+
+## 3주차(2022-12-12 ~ 2022-12-18)
+[__CODE TREE(49) 어려움__](https://www.codetree.ai/frequent-problems//santa-gift-factory/description)
+
+[__CODE TREE(51) 어려움__](https://www.codetree.ai/frequent-problems/santa-gift-factory-2/description)
