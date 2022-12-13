@@ -27,11 +27,11 @@ __`한 주동안 주어진 문제를 반드시 풀고, 어떤식으로 접근해
 > __2. CODE TREE 삼성 기출문제 1 CYCLE로 변경__
 
 ## 2주차(2022-12-05 ~ 2022-12-11)
-[__CODE TREE(48) 보통__](https://www.codetree.ai/frequent-problems/battle-ground/description)
+[__CODE TREE(48) 골드 II__](https://www.codetree.ai/frequent-problems/battle-ground/description)
 
-[__CODE TREE(50) 보통__](https://www.codetree.ai/frequent-problems/codetree-mon-bread/description)
+[__CODE TREE(50) 골드 II__](https://www.codetree.ai/frequent-problems/codetree-mon-bread/description)
 
 ## 3주차(2022-12-12 ~ 2022-12-18)
-[__CODE TREE(49) 어려움__](https://www.codetree.ai/frequent-problems//santa-gift-factory/description)
+[__CODE TREE(49) 플레티넘 IV__](https://www.codetree.ai/frequent-problems//santa-gift-factory/description)
 
-[__CODE TREE(51) 어려움__](https://www.codetree.ai/frequent-problems/santa-gift-factory-2/description)
+[__CODE TREE(51) 플레티넘 V__](https://www.codetree.ai/frequent-problems/santa-gift-factory-2/description)
