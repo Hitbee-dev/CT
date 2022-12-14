@@ -1,88 +1,132 @@
-''' 포켓몬 빵
-빵을 구하고자 하는 m명의 사람이 있음
+import sys, math
 
-1번 사람은 1분에
-2번 사람은 2분에
-m번 사람은 m분에
-각자의 베이스캠프에서 출발해서 편의점으로 이동함
+input = sys.stdin.readline
 
-사람들이 목표로 하는 편의점은 모두 다름
-
-이 모든 일은 n*n 크기의 격자 위에서 진행됨
-
-빵을 구하는 행동은 1분동안 진행되는데, 정확히 1, 2, 3 순서로 진행되어야 함
-
-1. 격자에 있는 사람들이 본인이 가고 싶은 편의점을 향해 1칸 움직임
-    -> 최단 거리로 움직이며, 최단거리로 움직이는 방법이 여러개라면
-    북, 서, 동, 남 순서대로 움직임
-
-2. 편의점에 도착하면 편의점에서 멈추고 이 때부터 다른 사람들은 해당 편의점이 있는 칸을 지나갈 수 없음
-
-3. 현재 시간이 t분이고 t<=m이 되면 t번 사람은 자신이 가고싶은 편의점과 가장 가까이 있는 베이스캠프에 들어감
-    -> 여기서 가장 가까이 있는 뜻 역시 최단거리
-    -> 가장 가까이 있는 베이스캠프도 여러개라면 그 중 행(위, 아래)이 작은 베이스캠프, 행이 같다면 열(왼, 오른)이 작은 베이스 캠프로 들어감
-    t번 사람이 베이스 캠프로 이동하는 데에는 시간이 전혀 소요되지 않음
-
-    이때부터 다른사람들은 베이스 캠프가 있는 칸을 지나갈 수 없게 됨
-    t번 사람이 편의점을 향해 움직이기 시작했더라도 해당 베이스 캠프는 앞으로 절대 지나갈 수 없음
-'''
+N, M = map(int, input().split())
+area = [list(map(int, input().split())) for _ in range(N)]
+store = [list(map(int, input().split())) for _ in range(M)]
 
 # testcase1
-n, m = 5, 3
-area = [[0, 0, 0, 0, 0],
-        [1, 0, 0, 0, 1],
-        [0, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0],
-        [0, 0, 0, 0, 1]]
-store = [[2, 3],
-         [4, 4],
-         [5, 1]]
+# N, M = 5, 3
+# area = [[0, 0, 0, 0, 0],
+#         [1, 0, 0, 0, 1],
+#         [0, 0, 0, 0, 0],
+#         [0, 1, 0, 0, 0],
+#         [0, 0, 0, 0, 1]]
+# store = [[2, 3],
+#          [4, 4],
+#          [5, 1]]
 
-player = {}
-# 플레이어의 초기 위치
-for i in range(m):
-    player[i] = (-1, -1)
+# testcase2
+# N, M = 3, 4
+# area = [[0, 0, 1],
+#         [1, 1, 0],
+#         [1, 1, 0]]
+# store = [[2, 3],
+#          [1, 1],
+#          [3, 3],
+#          [1, 2]]
 
-# 편의점 좌표 재설정 및 지도에 편의점 위치 추가
-for idx in range(len(store)):
-    nx, ny = store[idx][0]-1, store[idx][1]-1
-    store[idx] = (nx, ny)
-    area[nx][ny] = 2
-print(store)
+def heuristic(x1, y1, x2, y2):
+    return int(math.sqrt(((x2-x1)**2) + ((y2-y1)**2))*10)
 
-basecamp = {}
-# 베이스캠프의 위치
-for i in range(n):
-    for j in range(n):
-        # 만약 베이스캠프라면
+def astar(f, g, h, x1, y1, x2, y2):
+    # 남 동 서 북
+    dx = [1, 0, 0, -1]
+    dy = [0, 1, -1, 0]
+
+    buffer = []
+    g += 10
+    for x, y in zip(dx, dy):
+        nx1, ny1 = (x1+x), (y1+y)
+        # if -1 == nx1 or N == nx1 or -1 == ny1 or N == ny1:
+        #     continue
+        # if (nx1, ny1) in wall:
+        #     continue
+        if (nx1, ny1) in closed_list:
+            continue
+        h = heuristic(nx1, ny1, x2, y2)
+        f = g + h
+        buffer.append([f, (nx1, ny1)])
+    nx, ny = min(buffer)[1]
+    # print(buffer, (nx, ny))
+    open_list.append((nx, ny))
+    return nx, ny
+
+F, G, H = 0, 0, 0
+
+# basecamp 위치 저장
+basecamp = []
+for i in range(N):
+    for j in range(N):
         if area[i][j] == 1:
-            basecamp[(i, j)] = []
+            basecamp.append([i, j])
 
+# store 위치 재 조정
+for idx in range(len(store)):
+    sx, sy = store[idx]
+    store[idx] = [sx-1, sy-1]
 
-# 1. 격자에 있는 사람들이 본인이 가고 싶은 편의점을 향해 1칸 움직임
-#   -> 최단 거리로 움직이며, 최단 거리로 움직이는 방법이 여러개라면
-#      북, 서, 동, 남 순서대로 움직임
+# 가고싶은 편의점에서 가장 가까운 베이스캠프 탐색
+## astar 알고리즘을 사용하려면 정확한 출발지점과 도착지점이 있어야 함
+wall = []
+path_length = [0]*M
+for user, (sx, sy) in enumerate(store):
+    wall_buffer = []
+    for bx, by in basecamp:
+        if (sx, sy) in wall:
+            continue
+        if (bx, by) in wall:
+            continue
+        open_list = []
+        closed_list = []
+        nsx, nsy = sx, sy
+        open_list.append((nsx, nsy))
+        closed_list.append(open_list.pop())
+        # print("시작", (nsx, nsy),"목표", (bx, by))
+        # astar 알고리즘 실행
+        while True:
+            nsx, nsy = astar(F, G, H, nsx, nsy, bx, by)
+            closed_list.append(open_list.pop())
+            if (nsx, nsy) == (bx, by):
+                break
+        # print("결과", user, open_list, closed_list)
 
-# 2. 편의점에 도착하면 편의점에서 멈추고 다른 사람들은 해당 편의점이 있는 칸을 지나갈 수 없음
+        wall_buffer.append(closed_list)        
+    #     print("========================")
+    # print("wall buffer",wall_buffer)
 
-# 3. 현재 시간이 t분이고, t<=m이 되면 t번 사람은 자신이 가고싶은 편의점과 가장 가까이 있는 베이스캠프에 들어감
-#   -> 여기서 가장 가까이 있는 뜻 역시 최단거리
-#   -> 가장 가까이 있는 베이스캠프도 여러개라면 그 중 행(위, 아래)이 작은 베이스캠프,
-#   -> 행도 같다면 열(왼, 오른)이 작은 베이스 캠프로 들어감
-#   -> t번 사람이 베이스 캠프로 이동하는데에는 시간 소요 X
-
-# 편의점에서 출발해서 베이스캠프까지 가는 최단거리 구함
-# 단, 최단거리가 같다면 북, 서, 동, 남 순서대로 우선순위가 잡힘
-
-for k, v in basecamp.items():
-    print(k, v)
-
-for a in area:
-    print(a)
-
-for k, v in player.items():
-    print(k, v)
-
-
-
-
+    check_path = []
+    for wb in wall_buffer:
+        if check_path == []:
+            check_path = wb
+        else:
+            if len(check_path) == len(wb): # 최단거리 같을 때
+                if check_path[-1][0] == wb[-1][0]: # 행이 같을 때
+                    if check_path[-1][1] > wb[-1][1]: # 새 값이 더 작다면
+                        check_path = wb # 바꾸기
+                else: # 행이 다를 때
+                    if check_path[-1][0] > wb[-1][0]: # 새 값이 더 작다면
+                        check_path = wb
+            elif len(check_path) > len(wb):
+                check_path.clear()
+                check_path = wb
+    # print("최종",check_path, len(check_path))
+    wall.append(check_path[0])
+    wall.append(check_path[-1])
+    path_length[user] = len(check_path)
+#     print(wall)
+#     print("==========Next Step=========")
+# print(path_length)
+count = 1
+time = 1
+while sum(path_length) != len(path_length):
+    for i in range(count):
+        if path_length[i] > 1:
+            path_length[i] -= 1
+    if count < M:
+        count += 1
+    time += 1
+    # print(path_length)
+    # print(count)
+print(time)
